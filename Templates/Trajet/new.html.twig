@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Proposer un covoiturage{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .trajet-form-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 700px;
+            margin: 2rem auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .trajet-form-container h2 {
+            text-align: center;
+            color: #2e7d32;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-top: 0.4rem;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: block;
+            margin: 1rem auto 0;
+        }
+
+        button:hover {
+            background-color: #388e3c;
+        }
+
+        @media (max-width: 600px) {
+            .trajet-form-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="trajet-form-container">
+        <h2>Proposer un covoiturage</h2>
+
+        {{ form_start(form) }}
+
+            <div class="form-group">
+                {{ form_label(form.Depart, 'Ville de départ') }}
+                {{ form_widget(form.Depart) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.Arrivee, 'Ville d’arrivée') }}
+                {{ form_widget(form.Arrivee) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.dateDepart, 'Date de départ') }}
+                {{ form_widget(form.dateDepart) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.dateArrivee, 'Date d’arrivée') }}
+                {{ form_widget(form.dateArrivee) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.placesDisponibles, 'Nombre de places disponibles') }}
+                {{ form_widget(form.placesDisponibles) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.prix, 'Prix par personne (€)') }}
+                {{ form_widget(form.prix) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.voiture, 'Véhicule utilisé') }}
+                {{ form_widget(form.voiture) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.ecologique, 'Trajet écologique ?') }}
+                {{ form_widget(form.ecologique) }}
+            </div>
+
+            <button type="submit">Créer le trajet</button>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

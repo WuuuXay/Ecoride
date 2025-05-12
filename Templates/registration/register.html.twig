@@ -1,0 +1,139 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - EcoRide{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .register-section {
+            background: linear-gradient(rgba(40, 180, 100, 0.1), rgba(40, 180, 100, 0.1)), url('{{ asset('images/register-bg.jpg') }}');
+            background-size: cover;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+        }
+        .register-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .register-header {
+            background-color: #28b464;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .password-strength {
+            height: 5px;
+            background: #eee;
+            margin-top: 5px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <section class="register-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="register-card">
+                        <div class="register-header">
+                            <h2><i class="fas fa-leaf me-2"></i>Créer un compte EcoRide</h2>
+                            <p class="mb-0">Rejoignez notre communauté et bénéficiez de 20 crédits offerts</p>
+                        </div>
+                        <div class="p-4">
+                            {{ form_start(registrationForm, {'attr': {'class': 'row g-3'} }) }}
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.pseudo, {
+                                        'attr': {'class': 'form-control'},
+                                        'label': 'Pseudo'
+                                    }) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.email, {
+                                        'attr': {'class': 'form-control'}
+                                    }) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.plainPassword.first, {
+                                        'attr': {'class': 'form-control', 'oninput': 'checkPasswordStrength(this.value)'},
+                                        'label': 'Mot de passe'
+                                    }) }}
+                                    <div class="password-strength">
+                                        <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                                    </div>
+                                    <small id="passwordHelp" class="form-text text-muted">Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre.</small>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(registrationForm.plainPassword.second, {
+                                        'attr': {'class': 'form-control'},
+                                        'label': 'Confirmer le mot de passe'
+                                    }) }}
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        {{ form_widget(registrationForm.agreeTerms, {
+                                            'attr': {'class': 'form-check-input'}
+                                        }) }}
+                                        <label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">
+                                            J'accepte les <a href="#" class="text-success">conditions d'utilisation</a> et la <a href="#" class="text-success">politique de confidentialité</a>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-success w-100 py-2">S'inscrire</button>
+                                </div>
+                                <div class="col-12 text-center">
+                                    <p class="mb-0">Déjà un compte ? <a href="{{ path('login') }}" class="text-success">Se connecter</a></p>
+                                </div>
+                            {{ form_end(registrationForm) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            let strength = 0;
+            
+            // Check length
+            if (password.length >= 8) strength += 25;
+            if (password.length >= 12) strength += 15;
+            
+            // Check for mixed case
+            if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 25;
+            
+            // Check for numbers
+            if (password.match(/[0-9]/)) strength += 25;
+            
+            // Check for special chars
+            if (password.match(/[^a-zA-Z0-9]/)) strength += 10;
+            
+            // Update the strength bar
+            strengthBar.style.width = strength + '%';
+            
+            // Change color
+            if (strength < 50) {
+                strengthBar.style.backgroundColor = '#dc3545';
+            } else if (strength < 75) {
+                strengthBar.style.backgroundColor = '#ffc107';
+            } else {
+                strengthBar.style.backgroundColor = '#28a745';
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,56 @@
+home:
+    path: /
+    controller: App\Controller\HomeController::index
+
+covoiturages:
+    path: /covoiturages
+    controller: App\Controller\CovoiturageController::index
+
+carte:
+    path: /covoiturages/carte
+    controller: App\Controller\CovoiturageController::carte
+
+dashboard:
+    path: /dashboard
+    controller: App\Controller\UserController::dashboard
+
+admin_dashboard:
+    path: /admin
+    controller: App\Controller\AdminController::dashboard
+
+employe_dashboard:
+    path: /employe
+    controller: App\Controller\EmployeController::dashboard
+
+login:
+    path: /login
+    controller: App\Controller\LoginController::login
+
+logout:
+    path: /logout
+
+register:
+    path: /register
+    controller: App\Controller\RegistrationController::register
+
+trajet:
+    path: /trajet
+    controller: App\Controller\TrajetController::new
+
+ajouter_voiture:
+    path: /voiture/ajouter
+    controller: App\Controller\VoitureController::ajouter
+
+covoiturage_detail:
+    path: /covoiturages/detail/{id}
+    controller: App\Controller\CovoiturageController::detail
+    methods: GET
+
+covoiturage_participer:
+    path: /covoiturages/participer/{id}
+    controller: App\Controller\CovoiturageController::participer
+    methods: POST
+
+ajouter_credits:
+    path: /credits/ajouter
+    controller: App\Controller\CreditController::ajouterCredits

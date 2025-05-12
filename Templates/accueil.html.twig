@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+<h1>Bienvenue sur EcoRide</h1>
+<p style="text-align: center;">Réduisez votre empreinte carbone tout en partageant vos trajets.</p>
+
+<img src="/img/eco.jpg" alt="Illustration écologique">
+
+<form method="get" action="{{ path('covoiturages') }}">
+    <input type="text" name="depart" placeholder="Ville de départ" required>
+    <input type="text" name="arrivee" placeholder="Ville d'arrivée" required>
+    <input type="date" name="date" required>
+    <button type="submit">Rechercher un trajet</button>
+</form>
+{% endblock %}

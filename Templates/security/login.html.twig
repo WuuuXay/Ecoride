@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - EcoRide{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .login-section {
+            background: linear-gradient(rgba(40, 180, 100, 0.1), rgba(40, 180, 100, 0.1)), url('{{ asset('images/login-bg.jpg') }}');
+            background-size: cover;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+        }
+        .login-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .login-header {
+            background-color: #28b464;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <section class="login-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="login-card">
+                        <div class="login-header">
+                            <h2><i class="fas fa-leaf me-2"></i>Connexion à EcoRide</h2>
+                        </div>
+                        <div class="p-4">
+                            {% if error %}
+                                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                            {% endif %}
+
+                            <form method="post">
+                                <div class="mb-3">
+                                    <label for="inputEmail" class="form-label">Email</label>
+                                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="inputPassword" class="form-label">Mot de passe</label>
+                                    <input type="password" name="password" id="inputPassword" class="form-control" required>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe" name="_remember_me">
+                                    <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
+                                </div>
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                                <button type="submit" class="btn btn-success w-100 py-2 mb-3">Se connecter</button>
+                                
+                                <div class="text-center">
+                                    <p>Pas encore de compte ? <a href="{{ path('register') }}" class="text-success">S'inscrire</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

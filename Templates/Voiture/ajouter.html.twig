@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un véhicule{% endblock %}
+
+{% block body %}
+<h2>Ajouter un véhicule</h2>
+
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-success">Enregistrer</button>
+{{ form_end(form) }}
+
+<a href="{{ path('dashboard') }}">⬅ Retour à mon espace</a>
+{% endblock %}

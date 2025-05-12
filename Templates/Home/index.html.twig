@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue chez EcoRide{% endblock %}
+
+{% block body %}
+    <h2>Rejoignez le mouvement du covoiturage écologique</h2>
+    <p>EcoRide vous aide à voyager en réduisant votre empreinte carbone. Trouvez ou proposez un trajet en toute simplicité.</p>
+
+    <img src="/img/eco.jpg" alt="Voyager vert avec EcoRide" style="width:100%; max-width:600px; display:block; margin:auto;">
+
+    <form method="get" action="{{ path('covoiturages') }}" style="margin-top:2rem;">
+        <label>Ville de départ :</label>
+        <input type="text" name="depart" required>
+
+        <label>Ville d'arrivée :</label>
+        <input type="text" name="arrivee" required>
+
+        <label>Date :</label>
+        <input type="date" name="date" required>
+
+        <button type="submit">Rechercher</button>
+    </form>
+
+    <div id="map"></div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    var map = L.map('map').setView([46.603354, 1.888334], 6); // Centre France
+
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap',
+        minZoom: 2,
+        maxZoom: 18
+    }).addTo(map);
+
+    // Exemple de marqueurs fixes
+    var marker = L.marker([48.8566, 2.3522]).addTo(map).bindPopup("Paris");
+    var marker2 = L.marker([43.6045, 1.4442]).addTo(map).bindPopup("Toulouse");
+
+    // Tu peux aussi faire une boucle Twig pour ajouter des trajets dynamiques
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du covoiturage{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Détails du trajet</h2>
+    
+    <div class="card">
+        <div class="card-body">
+            <h3>{{ covoiturage.depart }} → {{ covoiturage.arrivee }}</h3>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h4>Informations</h4>
+                    <p><strong>Date de départ:</strong> {{ covoiturage.dateDepart|date('d/m/Y H:i') }}</p>
+                    <p><strong>Date d'arrivée:</strong> {{ covoiturage.dateArrivee|date('d/m/Y H:i') }}</p>
+                    <p><strong>Prix:</strong> {{ covoiturage.prix }}€</p>
+                    <p><strong>Places disponibles:</strong> {{ covoiturage.placesDisponibles }}</p>
+                </div>
+                
+                <div class="col-md-6">
+                    <h4>Conducteur</h4>
+                    <p>{{ covoiturage.chauffeur.pseudo }}</p>
+                    
+                    {% if covoiturage.voiture %}
+                        <h4 class="mt-3">Véhicule</h4>
+                        <p>{{ covoiturage.voiture.marque }} {{ covoiturage.voiture.modele }}</p>
+                        <p>Immatriculation: {{ covoiturage.voiture.plaqueImmatriculation }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <a href="{{ path('covoiturages') }}" class="btn btn-primary mt-3">
+                Retour à la liste
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

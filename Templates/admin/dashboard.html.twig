@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - Gestion des comptes{% endblock %}
+
+{% block body %}
+<h2>Gestion des utilisateurs</h2>
+
+<table>
+    <thead>
+        <tr><th>ID</th><th>Email</th><th>Rôle</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+    {% for user in utilisateurs %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.roles|join(', ') }}</td>
+            <td>
+                <a href="#">Suspendre</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>Statistiques</h2>
+<!-- Graphiques avec Chart.js ou autre ici plus tard -->
+{% endblock %}

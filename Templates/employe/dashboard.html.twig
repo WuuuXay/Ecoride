@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employé - Gestion des avis{% endblock %}
+
+{% block body %}
+<h2>Avis en attente de validation</h2>
+
+<ul>
+{% for avis in avisAValider %}
+    <li>
+        Note : {{ avis.note }} / 5<br>
+        Commentaire : {{ avis.commentaire }}<br>
+        <a href="#">Valider</a> | <a href="#">Refuser</a>
+    </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

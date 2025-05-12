@@ -1,0 +1,153 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon espace{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="avatar-circle bg-primary text-white mb-3 mx-auto">
+                        {{ app.user.pseudo|first|upper }}
+                    </div>
+                    <h2>Bienvenue, {{ app.user.pseudo }}</h2>
+                    
+                    <div class="credits-display p-3 bg-light rounded mb-3">
+                        <h5>Mes crédits</h5>
+                        <div class="display-5 text-primary">{{ app.user.credits }}</div>
+                        <small>crédits disponibles</small>
+                        <div class="mt-2">
+                            <a href="{{ path('ajouter_credits') }}" class="btn btn-sm btn-success">
+                                <i class="fas fa-plus"></i> Ajouter
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Section ajoutée : Mes véhicules -->
+                    <div class="mt-4">
+                        <h5>Mes véhicules</h5>
+                        {% if mesVehicules|length > 0 %}
+                            <div class="list-group mt-2">
+                                {% for vehicule in mesVehicules %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>
+                                                <i class="fas fa-car text-secondary"></i>
+                                                {{ vehicule.marque }} {{ vehicule.modele }}
+                                            </span>
+                                            <span class="badge bg-info">
+                                                {{ vehicule.plaqueImmatriculation }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning mt-2">
+                                <p class="mb-1">Vous n'avez aucun véhicule enregistré</p>
+                                <p class="small mb-0">Pour créer un trajet, vous devez ajouter un véhicule</p>
+                            </div>
+                        {% endif %}
+                        <a href="{{ path('ajouter_voiture') }}" class="btn btn-sm btn-outline-success mt-2 w-100">
+                            <i class="fas fa-plus"></i> Ajouter un véhicule
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Mes covoiturages créés</h3>
+                    {% if mesCovoiturages|length > 0 %}
+                        <div class="list-group">
+                            {% for trajet in mesCovoiturages %}
+                                <a href="{{ path('covoiturage_detail', {id: trajet.id}) }}" 
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between">
+                                        <span>{{ trajet.depart }} → {{ trajet.arrivee }}</span>
+                                        <span class="badge bg-primary rounded-pill">
+                                            {{ trajet.placesDisponibles }} places
+                                        </span>
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ trajet.dateDepart|date('d/m/Y H:i') }}
+                                    </small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Vous n'avez organisé aucun trajet</p>
+                    {% endif %}
+                    
+                    <div class="mt-3">
+                        <a href="{{ path('trajet') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Proposer un trajet
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-title">Mes participations</h3>
+                    {% if mesParticipations|length > 0 %}
+                        <div class="list-group">
+                            {% for participation in mesParticipations %}
+                                <a href="{{ path('covoiturage_detail', {id: participation.covoiturage.id}) }}" 
+                                   class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between">
+                                        <span>
+                                            {{ participation.covoiturage.depart }} → 
+                                            {{ participation.covoiturage.arrivee }}
+                                        </span>
+                                        <span class="badge bg-danger rounded-pill">
+                                            -{{ participation.covoiturage.prix }} crédits
+                                        </span>
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ participation.covoiturage.dateDepart|date('d/m/Y H:i') }}
+                                        {% if participation.confirme %}
+                                            <span class="badge bg-success ms-2">Confirmé</span>
+                                        {% endif %}
+                                    </small>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Vous n'avez participé à aucun trajet</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    
+    .credits-display {
+        border-left: 4px solid #0d6efd;
+    }
+    
+    .list-group-item {
+        transition: all 0.2s;
+    }
+    
+    .list-group-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(3px);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Covoiturages disponibles{% endblock %}
+
+{% block body %}
+<h2 style="text-align: center; margin-top: 20px;">Trouvez votre covoiturage écologique 🌱</h2>
+
+<div class="covoiturage-container">
+    <div id="map"></div>
+    <div class="trajet-list">
+        {% for trajet in trajets %}
+            <div class="trajet-card">
+                <h3>{{ trajet.conducteur }}</h3>
+                <p><strong>De :</strong> {{ trajet.villeDepart }}</p>
+                <p><strong>À :</strong> {{ trajet.villeArrivee }}</p>
+                <p><strong>Prix :</strong> {{ trajet.prix }} €</p>
+                <p><strong>Date :</strong> {{ trajet.date|date('d/m/Y H:i') }}</p>
+                <a href="{{ path('covoiturage_detail', {'id': trajet.id}) }}">Voir les détails</a>
+            </div>
+        {% else %}
+            <p>Aucun covoiturage disponible</p>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    .covoiturage-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    #map {
+        flex: 2;
+        height: 500px;
+        min-width: 300px;
+        border-radius: 10px;
+    }
+
+    .trajet-list {
+        flex: 1;
+        min-width: 300px;
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 10px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .trajet-card {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .trajet-card h3 {
+        margin: 0 0 5px;
+        color: #2e7d32;
+    }
+
+    .trajet-card a {
+        color: #388e3c;
+        text-decoration: underline;
+        font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+        .covoiturage-container {
+            flex-direction: column;
+        }
+        #map, .trajet-list {
+            height: 300px;
+        }
+    }
+</style>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-sA+4pGB2gwyUr0znxyVX6NNPzZDE3k/IyMVfKn7Y2cQ=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+        integrity="sha256-DoS6xvDZkq6KHr7DBK1uOHuUdaYc7BOzOeo9Jc6tW70=" crossorigin=""></script>
+
+<script>
+    const map = L.map('map').setView([46.603354, 1.888334], 6);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const trajets = [
+        {% for trajet in trajets %}
+        {
+            depart: [{{ trajet.coordDepart.lat }}, {{ trajet.coordDepart.lon }}],
+            arrivee: [{{ trajet.coordArrivee.lat }}, {{ trajet.coordArrivee.lon }}],
+            conducteur: "{{ trajet.conducteur }}",
+            prix: "{{ trajet.prix }}",
+        },
+        {% endfor %}
+    ];
+
+    trajets.forEach(trajet => {
+        const line = L.polyline([trajet.depart, trajet.arrivee], { color: 'green' }).addTo(map);
+        const marker = L.marker(trajet.depart).addTo(map);
+        marker.bindPopup(`<b>${trajet.conducteur}</b><br>${trajet.prix} €`);
+    });
+</script>
+{% endblock %}
