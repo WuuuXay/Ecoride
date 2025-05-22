@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon historique de covoiturages{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Mon historique de covoiturages</h1>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2>Covoiturages organisés</h2>
+                </div>
+                <div class="card-body">
+                    {% if covoituragesOrganises|length > 0 %}
+                        <div class="list-group">
+                            {% for covoiturage in covoituragesOrganises %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h5>{{ covoiturage.depart }} → {{ covoiturage.arrivee }}</h5>
+                                            <small class="text-muted">
+                                                {{ covoiturage.dateDepart|date('d/m/Y H:i') }}
+                                            </small>
+                                        </div>
+                                        <span class="badge bg-{{ covoiturage.annule ? 'danger' : 'success' }}">
+                                            {{ covoiturage.annule ? 'Annulé' : 'Terminé' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Vous n'avez organisé aucun covoiturage</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h2>Mes participations</h2>
+                </div>
+                <div class="card-body">
+                    {% if participations|length > 0 %}
+                        <div class="list-group">
+                            {% for participation in participations %}
+                                <div class="list-group-item">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h5>{{ participation.covoiturage.depart }} → {{ participation.covoiturage.arrivee }}</h5>
+                                            <small class="text-muted">
+                                                {{ participation.covoiturage.dateDepart|date('d/m/Y H:i') }}
+                                            </small>
+                                        </div>
+                                        <span class="badge bg-{{ participation.annule ? 'danger' : 'success' }}">
+                                            {{ participation.annule ? 'Annulé' : 'Terminé' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Vous n'avez participé à aucun covoiturage</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

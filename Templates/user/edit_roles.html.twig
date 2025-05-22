@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mes rôles{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Choisissez votre rôle</h2>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <div class="mb-4">
+                            <div class="form-check form-switch mb-3">
+                                {{ form_widget(form.isPassager) }}
+                                {{ form_label(form.isPassager) }}
+                            </div>
+                            <div class="form-check form-switch mb-3">
+                                {{ form_widget(form.isChauffeur) }}
+                                {{ form_label(form.isChauffeur) }}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

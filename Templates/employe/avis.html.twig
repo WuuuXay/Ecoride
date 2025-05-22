@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Gestion des avis' %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Modération des avis</h1>
+    
+    <div class="card mt-4">
+        <div class="card-header bg-warning">
+            <h2>Avis en attente de validation</h2>
+        </div>
+        <div class="card-body">
+            {% if avisAValider %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Auteur</th>
+                                <th>Chauffeur</th>
+                                <th>Note</th>
+                                <th>Commentaire</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for avis in avisAValider %}
+                                <tr>
+                                    <td>{{ avis.id }}</td>
+                                    <td>{{ avis.auteur.pseudo }}</td>
+                                    <td>{{ avis.cible.pseudo }}</td>
+                                    <td>{{ avis.note }}/5</td>
+                                    <td>{{ avis.commentaire|u.truncate(50, '...') }}</td>
+                                    <td>{{ avis.dateCreation|date('d/m/Y H:i') }}</td>
+                                    <td>
+                                        <form method="post" action="{{ path('employe_validate_avis', {id: avis.id}) }}" class="d-inline">
+                                            <button class="btn btn-sm btn-success">Valider</button>
+                                        </form>
+                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" 
+                                                data-bs-target="#rejectModal{{ avis.id }}">
+                                            Rejeter
+                                        </button>
+                                        
+                                        <!-- Modal de rejet -->
+                                        <div class="modal fade" id="rejectModal{{ avis.id }}" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">Rejeter l'avis</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <form method="post" action="{{ path('employe_reject_avis', {id: avis.id}) }}">
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Raison du rejet</label>
+                                                                <input type="text" name="rejection_reason" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                            <button type="submit" class="btn btn-danger">Confirmer le rejet</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">Aucun avis à valider</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card mt-4">
+        <div class="card-header bg-success text-white">
+            <h2>Avis validés</h2>
+        </div>
+        <div class="card-body">
+            {% if avisValides %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Auteur</th>
+                                <th>Chauffeur</th>
+                                <th>Note</th>
+                                <th>Commentaire</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for avis in avisValides %}
+                                <tr>
+                                    <td>{{ avis.id }}</td>
+                                    <td>{{ avis.auteur.pseudo }}</td>
+                                    <td>{{ avis.cible.pseudo }}</td>
+                                    <td>{{ avis.note }}/5</td>
+                                    <td>{{ avis.commentaire|u.truncate(50, '...') }}</td>
+                                    <td>{{ avis.dateCreation|date('d/m/Y H:i') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">Aucun avis validé</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

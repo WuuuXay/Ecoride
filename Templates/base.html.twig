@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}EcoRide{% endblock %}</title>
@@ -26,19 +26,43 @@
             color: white;
             padding: 20px;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        nav {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
         }
 
         nav a {
             color: white;
-            margin: 0 10px;
-            text-decoration: underline;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #c8e6c9;
         }
 
         main {
             flex: 1;
-            max-width: 960px;
-            margin: auto;
+            max-width: 1200px;
+            margin: 20px auto;
             padding: 20px;
+            width: 95%;
         }
 
         footer {
@@ -46,10 +70,12 @@
             color: white;
             text-align: center;
             padding: 15px;
+            margin-top: auto;
         }
 
         h1, h2 {
             text-align: center;
+            margin: 0;
         }
 
         form {
@@ -74,6 +100,7 @@
             background-color: #4caf50;
             color: white;
             border: none;
+            cursor: pointer;
         }
 
         button:hover {
@@ -86,6 +113,12 @@
             padding: 10px;
             border-radius: 5px;
             text-align: center;
+            margin: 20px 0;
+        }
+
+        .alert-success {
+            background-color: #c8e6c9;
+            color: #2e7d32;
         }
 
         @media (max-width: 600px) {
@@ -96,6 +129,12 @@
             body {
                 font-size: 16px;
             }
+
+            nav {
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
         }
     </style>
 </head>
@@ -103,28 +142,53 @@
     <header>
         <h1>EcoRide</h1>
         <nav>
-            <a href="{{ path('home') }}">Accueil</a>
-            <a href="{{ path('covoiturages') }}">Covoiturages</a>
+            <a href="{{ path('home') }}"><i class="fas fa-home"></i> Accueil</a>
+            <a href="{{ path('covoiturages') }}"><i class="fas fa-car"></i> Covoiturages</a>
+            
             {% if app.user %}
-                <a href="{{ path('dashboard') }}">Mon Espace</a>
-                <a href="{{ path('logout') }}">Déconnexion</a>
+                <a href="{{ path('dashboard') }}"><i class="fas fa-user"></i> Mon Espace</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('admin_dashboard') }}"><i class="fas fa-cog"></i> Admin</a>
+                {% endif %}
+                {% if is_granted('ROLE_EMPLOYE') %}
+                    <a href="{{ path('employe_dashboard') }}"><i class="fas fa-id-card"></i> Employé</a>
+                {% endif %}
+                <a href="{{ path('logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                <div class="user-info">
+                    Connecté en tant que {{ app.user.pseudo }}
+                </div>
             {% else %}
-                <a href="{{ path('login') }}">Connexion</a>
+                <a href="{{ path('login') }}"><i class="fas fa-sign-in-alt"></i> Connexion</a>
+                <a href="{{ path('register') }}"><i class="fas fa-user-plus"></i> Inscription</a>
             {% endif %}
-            <a href="{{ path('register') }}">Inscription</a>
         </nav>
     </header>
 
-
     <main>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        
+        {% for message in app.flashes('error') %}
+            <div class="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+        
         {% block body %}{% endblock %}
     </main>
 
     <footer>
-        Contact : <a href="mailto:contact@ecoride.fr" style="color:white;">contact@ecoride.fr</a> |
-        <a href="#" style="color:white;">Mentions légales</a>
+        <div>
+            <a href="mailto:contact@ecoride.fr" style="color:white;"><i class="fas fa-envelope"></i> contact@ecoride.fr</a> |
+            <a href="#" style="color:white;"><i class="fas fa-file-alt"></i> Mentions légales</a> |
+            <a href="#" style="color:white;"><i class="fas fa-question-circle"></i> Aide</a>
+        </div>
+        <div style="margin-top: 10px;">
+            &copy; {{ "now"|date("Y") }} EcoRide - Tous droits réservés
+        </div>
     </footer>
 </body>
 </html>
-
-

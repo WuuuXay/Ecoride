@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Détail incident #' ~ covoiturage.id %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Incident #{{ covoiturage.id }}</h1>
+    
+    <div class="card mt-4">
+        <div class="card-header bg-danger text-white">
+            <h2>Détails du trajet</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Informations trajet</h3>
+                    <p><strong>Départ :</strong> {{ covoiturage.depart }}</p>
+                    <p><strong>Arrivée :</strong> {{ covoiturage.arrivee }}</p>
+                    <p><strong>Date :</strong> {{ covoiturage.dateDepart|date('d/m/Y H:i') }}</p>
+                    <p><strong>Prix :</strong> {{ covoiturage.prix }} crédits</p>
+                </div>
+                <div class="col-md-6">
+                    <h3>Participants</h3>
+                    <p><strong>Chauffeur :</strong> 
+                        {{ covoiturage.chauffeur.pseudo }} ({{ covoiturage.chauffeur.email }})
+                    </p>
+                    <p><strong>Passagers :</strong></p>
+                    <ul>
+                        {% for participation in covoiturage.participations %}
+                            <li>
+                                {{ participation.passager.pseudo }} ({{ participation.passager.email }})
+                                {% if participation.isConfirme() %}
+                                    <span class="badge bg-success">Confirmé</span>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <h3>Description de l'incident</h3>
+                <div class="alert alert-danger">
+                    {{ covoiturage.descriptionIncident|nl2br }}
+                </div>
+            </div>
+            
+            {% if covoiturage.avis|length > 0 %}
+                <div class="mt-4">
+                    <h3>Avis liés</h3>
+                    <div class="list-group">
+                        {% for avis in covoiturage.avis %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <strong>{{ avis.auteur.pseudo }} → {{ avis.cible.pseudo }}</strong>
+                                    <span class="badge bg-{{ avis.valide ? 'success' : 'warning' }}">
+                                        {{ avis.valide ? 'Validé' : 'En attente' }}
+                                    </span>
+                                </div>
+                                <div class="mt-2">
+                                    Note : {{ avis.note }}/5<br>
+                                    {{ avis.commentaire }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <a href="{{ path('employe_incidents') }}" class="btn btn-primary mt-3">
+        Retour à la liste
+    </a>
+</div>
+{% endblock %}

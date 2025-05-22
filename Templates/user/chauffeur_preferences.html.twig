@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Préférences de chauffeur{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2>Préférences de chauffeur</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-4">
+                        Veuillez renseigner vos préférences pour vos covoiturages en tant que chauffeur.
+                    </p>
+                    
+                    {{ form_start(form) }}
+                        <div class="mb-4">
+                            <h5 class="mb-3">Acceptez-vous dans votre véhicule ?</h5>
+                            
+                            <div class="mb-3">
+                                {{ form_row(form.accepteFumeurs) }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form_row(form.accepteAnimaux) }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            {{ form_row(form.preferencesSupplementaires) }}
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">Enregistrer les préférences</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

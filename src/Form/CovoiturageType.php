@@ -9,8 +9,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -45,9 +46,20 @@ class CovoiturageType extends AbstractType
             ])
             ->add('voiture', EntityType::class, [
                 'class' => Voiture::class,
-                'choice_label' => 'modele',
+                'choices' => $options['user']->getVoitures(),
+                'choice_label' => function(Voiture $voiture) {
+                    return $voiture->getMarque() . ' ' . $voiture->getModele() . ' (' . $voiture->getPlaqueImmatriculation() . ')';
+                },
                 'label' => 'Véhicule utilisé',
                 'placeholder' => 'Choisissez un véhicule'
+            ])
+            ->add('description', TextareaType::class, [
+                'label' => 'Description du trajet',
+                'required' => false,
+                'attr' => [
+                    'rows' => 5,
+                    'placeholder' => 'Décrivez votre trajet (points de rencontre, préférences, etc.)'
+                ]
             ])
             ->add('ecologique', CheckboxType::class, [
                 'label' => 'Voyage écologique (voiture électrique)',
@@ -59,6 +71,7 @@ class CovoiturageType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Covoiturage::class,
+            'user' => null, // Option pour passer l'utilisateur connecté
         ]);
     }
 }

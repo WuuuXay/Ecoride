@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -28,7 +29,13 @@ class VoitureType extends AbstractType
                 'placeholder' => 'Choisissez l’énergie',
             ])
             ->add('plaqueImmatriculation', TextType::class)
-            ->add('nbPlaces', NumberType::class);
+            ->add('nbPlaces', NumberType::class)
+            ->add('datePremiereImmatriculation', DateType::class, [
+                'widget' => 'single_text',
+                'required' => false,
+                'label' => 'Date de première immatriculation',
+                'attr' => ['placeholder' => 'YYYY-MM-DD'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

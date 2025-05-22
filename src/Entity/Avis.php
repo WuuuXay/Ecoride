@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: "App\Repository\AvisRepository")]
 class Avis
 {
     #[ORM\Id]
@@ -18,14 +18,33 @@ class Avis
     #[ORM\Column(type: 'text')]
     private $commentaire;
 
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'avisDonnes')]
     private $auteur;
 
-    #[ORM\ManyToOne(targetEntity: Utilisateur::class)]
+    #[ORM\ManyToOne(targetEntity: Utilisateur::class, inversedBy: 'avisRecus')]
     private $cible;
+
+#[ORM\ManyToOne(targetEntity: Covoiturage::class, inversedBy: 'avis')]
+private $covoiturage;
+
+public function getCovoiturage(): ?Covoiturage { return $this->covoiturage; }
+public function setCovoiturage(?Covoiturage $covoiturage): self { 
+    $this->covoiturage = $covoiturage; 
+    return $this; 
+}
+
+    
 
     #[ORM\Column(type: 'boolean')]
     private $valide = false;
+
+    #[ORM\Column(type: 'datetime')]
+    private $dateCreation;
+
+    public function __construct()
+    {
+        $this->dateCreation = new \DateTime();
+    }
 
     public function getId(): ?int { return $this->id; }
     public function getNote(): ?int { return $this->note; }
@@ -38,4 +57,6 @@ class Avis
     public function setCible(?Utilisateur $cible): self { $this->cible = $cible; return $this; }
     public function isValide(): bool { return $this->valide; }
     public function setValide(bool $valide): self { $this->valide = $valide; return $this; }
+    public function getDateCreation(): ?\DateTimeInterface { return $this->dateCreation; }
+    public function setDateCreation(\DateTimeInterface $dateCreation): self { $this->dateCreation = $dateCreation; return $this; }
 }

@@ -16,19 +16,21 @@ class TrajetController extends AbstractController
     #[Route('/trajet/new', name: 'trajet')]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
-        $voiture = $em->getRepository(Voiture::class)->findBy(['proprietaire' => $this->getUser()]);
-        if (empty($voiture)) {
+        $user = $this->getUser();
+        if ($user->getVoitures()->isEmpty()) {
             $this->addFlash('warning', 'Vous devez ajouter un véhicule avant de créer un trajet.');
             return $this->redirectToRoute('ajouter_voiture'); 
         }
 
         $trajet = new Covoiturage();
-        $form = $this->createForm(CovoiturageType::class, $trajet);
+        $form = $this->createForm(CovoiturageType::class, $trajet, [
+            'user' => $user
+        ]);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trajet->setChauffeur($this->getUser()); 
+            $trajet->setChauffeur($user); 
             $em->persist($trajet);
             $em->flush();
 

@@ -1,60 +1,96 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails du covoiturage{% endblock %}
+{% block title %}Détails du covoiturage - {{ covoiturage.depart }} à {{ covoiturage.arrivee }}{% endblock %}
 
 {% block body %}
 <div class="container mt-4">
-    <h2>Détails du trajet</h2>
-    
-    <div class="card">
-        <div class="card-body">
-            <h3>{{ covoiturage.depart }} → {{ covoiturage.arrivee }}</h3>
-            
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <h4>Informations</h4>
-                    <p><strong>Date de départ:</strong> {{ covoiturage.dateDepart|date('d/m/Y H:i') }}</p>
-                    <p><strong>Prix:</strong> {{ covoiturage.prix }}€</p>
-                    <p><strong>Places disponibles:</strong> {{ covoiturage.placesDisponibles }}</p>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2>Détails du trajet</h2>
                 </div>
-                
-                <div class="col-md-6">
-                    <h4>Conducteur</h4>
-                    <p>{{ covoiturage.chauffeur.pseudo }}</p>
-                    
-                    {% if covoiturage.voiture %}
-                        <h4 class="mt-3">Véhicule</h4>
-                        <p>{{ covoiturage.voiture.marque }} {{ covoiturage.voiture.modele }}</p>
-                    {% endif %}
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Itinéraire</h4>
+                            <p><strong>Départ:</strong> {{ covoiturage.depart }}</p>
+                            <p><strong>Arrivée:</strong> {{ covoiturage.arrivee }}</p>
+                            <p><strong>Date:</strong> {{ covoiturage.dateDepart|date('d/m/Y H:i') }}</p>
+                            <p><strong>Prix:</strong> {{ covoiturage.prix }} crédits</p>
+                            <p><strong>Places restantes:</strong> {{ covoiturage.placesDisponibles }}</p>
+
+                            {% if covoiturage.voiture %}
+                                <h4 class="mt-3">Véhicule</h4>
+                                <p>{{ covoiturage.voiture.marque }} {{ covoiturage.voiture.modele }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Description</h4>
+                            <p>{{ covoiturage.description ?? 'Aucune description fournie' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h3>Chauffeur</h3>
+                </div>
+                <div class="card-body text-center">
+                    <img src="{{ asset(covoiturage.chauffeur.photoProfil ? 'uploads/photos/' ~ covoiturage.chauffeur.photoProfil : 'images/default-avatar.png') }}" 
+                         class="rounded-circle mb-3" width="120" alt="Photo de {{ covoiturage.chauffeur.pseudo }}">
+                    <h4>
+                        <a href="{{ path('utilisateur_profil', {'id': covoiturage.chauffeur.id}) }}">
+                            {{ covoiturage.chauffeur.pseudo }}
+                        </a>
+                    </h4>
+                    <div class="rating mb-3">
+                        {% for i in 1..5 %}
+                            <i class="bi bi-star{{ i <= covoiturage.chauffeur.noteMoyenne ? '-fill' : '' }} text-warning"></i>
+                        {% endfor %}
+                        <span>({{ covoiturage.chauffeur.noteMoyenne|number_format(1) }}/5)</span>
+                    </div>
+                    <a href="#" class="btn btn-outline-primary">Voir profil</a>
                 </div>
             </div>
 
-            {% if app.user %}
-                {% if covoiturage.placesDisponibles > 0 and app.user != covoiturage.chauffeur %}
-                    <form action="{{ path('covoiturage_participer', {'id': covoiturage.id}) }}" method="post" class="mt-3">
-                        <input type="hidden" name="_token" value="{{ csrf_token('participer' ~ covoiturage.id) }}">
-                        <button type="submit" class="btn btn-success">
-                            Participer pour {{ covoiturage.prix }} crédits
-                        </button>
-                    </form>
-                {% elseif app.user == covoiturage.chauffeur %}
-                    <div class="alert alert-info mt-3">
-                        Vous êtes le conducteur de ce trajet
-                    </div>
-                {% else %}
-                    <div class="alert alert-warning mt-3">
-                        Plus de places disponibles
-                    </div>
-                {% endif %}
-            {% else %}
-                <div class="alert alert-info mt-3">
-                    <a href="{{ path('login') }}">Connectez-vous</a> pour participer à ce trajet
+            <div class="card">
+                <div class="card-body">
+                    {% if app.user %}
+{% if covoiturage.placesDisponibles > 0 and app.user != covoiturage.chauffeur and not estParticipant %}
+                            <!-- Réservation -->
+                            <form action="{{ path('covoiturage_reserver', {'id': covoiturage.id}) }}" method="POST">
+                                <button type="submit" class="btn btn-success btn-lg w-100">
+                                    Réserver ce trajet ({{ covoiturage.prix }} crédits)
+                                </button>
+                            </form>
+{% elseif estParticipant %}
+                            <div class="alert alert-success">
+                                Vous participez déjà à ce trajet
+                            </div>
+                        {% elseif app.user == covoiturage.chauffeur %}
+                            <div class="alert alert-info">
+                                Vous êtes le conducteur de ce trajet
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                Plus de places disponibles
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-info">
+                            <a href="{{ path('login') }}">Connectez-vous</a> pour participer à ce trajet
+                        </div>
+                    {% endif %}
+
+                    <a href="{{ path('covoiturages') }}" class="btn btn-primary mt-3 w-100">
+                        Retour à la liste
+                    </a>
                 </div>
-            {% endif %}
-            
-            <a href="{{ path('covoiturages') }}" class="btn btn-primary mt-3">
-                Retour à la liste
-            </a>
+            </div>
         </div>
     </div>
 </div>

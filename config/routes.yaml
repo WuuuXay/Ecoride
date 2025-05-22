@@ -14,6 +14,11 @@ dashboard:
     path: /dashboard
     controller: App\Controller\UserController::dashboard
 
+mon_profil:
+    path: /mon-profil
+    controller: App\Controller\UserController::profil
+    methods: GET
+
 admin_dashboard:
     path: /admin
     controller: App\Controller\AdminController::dashboard
@@ -54,3 +59,82 @@ covoiturage_participer:
 ajouter_credits:
     path: /credits/ajouter
     controller: App\Controller\CreditController::ajouterCredits
+
+modifier_voiture:
+    path: /voiture/modifier/{id}
+    controller: App\Controller\VoitureController::modifier
+    methods: [GET, POST]
+
+supprimer_voiture:
+    path: /voiture/supprimer/{id}
+    controller: App\Controller\VoitureController::supprimer
+    methods: [DELETE, POST]
+
+admin_create_employe:
+    path: /admin/employe/new
+    controller: App\Controller\AdminController::ajouter
+
+admin_toggle_user:
+    path: /admin/employe/new
+    controller: App\Controller\AdminController::activer
+
+admin_promote_user:
+    path: /admin/user/promote/{id}
+    controller: App\Controller\AdminController::promoteToEmploye
+
+edit_profile:
+    path: /profil/edit
+    controller: App\Controller\UserController::editProfile
+    methods: [GET, POST]
+
+covoiturage_reserver:
+    path: /covoiturages/reserver/{id}
+    controller: App\Controller\CovoiturageController::reserver
+    methods: [POST]
+
+covoiturage_confirmer:
+    path: /covoiturages/confirmer/{id}
+    controller: App\Controller\CovoiturageController::confirmer
+    methods: [POST]
+
+covoiturage_historique:
+    path: /covoiturages/historique
+    controller: App\Controller\CovoiturageController::historique
+
+covoiturage_annuler:
+    path: /covoiturage/annuler/{id}
+    controller: App\Controller\CovoiturageController::annuler
+    methods: POST
+
+profil_roles:
+    path: /profil/roles
+    controller: App\Controller\UserController::editRoles
+
+profil_chauffeur_preferences:
+    path: /profil/chauffeur-preferences
+    controller: App\Controller\UserController::chauffeurPreferences
+
+covoiturage_demarrer:
+    path: /covoiturage/{id}/demarrer
+    controller: App\Controller\CovoiturageController::demarrer
+
+covoiturage_terminer:
+    path: /covoiturage/{id}/terminer
+    controller: App\Controller\CovoiturageController::terminer
+
+participation_valider:
+    path: /participation/{id}/valider
+    controller: App\Controller\ParticipationController::validerTrajet
+
+utilisateur_profil:
+    path: /utilisateur/{id}
+    controller: App\Controller\UtilisateurController::profil
+    methods: [GET]
+
+employe_avis:
+    path: /employe/avis
+    controller: App\Controller\EmployeController::avis
+
+employe_incidents:
+    path: /employe/incidents
+    controller: App\Controller\EmployeController::incidents

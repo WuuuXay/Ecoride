@@ -1,28 +1,531 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Admin - Gestion des comptes{% endblock %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --primary-color: #4e73df;
+            --secondary-color: #858796;
+            --success-color: #1cc88a;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --light-color: #f8f9fc;
+            --dark-color: #5a5c69;
+        }
+        
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fc;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--primary-color) 0%, #224abe 100%);
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .sidebar-brand {
+            height: 4.375rem;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 800;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            letter-spacing: 0.05rem;
+            z-index: 1;
+            color: white !important;
+        }
+        
+        .sidebar-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin: 0 1rem 1rem;
+        }
+        
+        .nav-item .nav-link {
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .nav-item .nav-link:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item .nav-link.active {
+            color: white;
+            font-weight: 700;
+        }
+        
+        .nav-item .nav-link i {
+            margin-right: 0.5rem;
+        }
+        
+        /* Main content */
+        .topbar {
+            height: 4.375rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            background-color: white;
+        }
+        
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 0 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                margin-left: -250px;
+                transition: margin 0.3s ease;
+            }
+            .sidebar.show {
+                margin-left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.35rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.35rem;
+            font-weight: 700;
+        }
+        
+        .stat-card {
+            border-left: 0.25rem solid;
+            overflow: hidden;
+        }
+        
+        .stat-card.bg-primary {
+            border-left-color: var(--primary-color);
+        }
+        
+        .stat-card.bg-success {
+            border-left-color: var(--success-color);
+        }
+        
+        .stat-card.bg-info {
+            border-left-color: var(--info-color);
+        }
+        
+        .stat-card.bg-warning {
+            border-left-color: var(--warning-color);
+        }
+        
+        .stat-card .card-body {
+            padding: 1rem;
+        }
+        
+        .stat-card .card-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card .card-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        /* Table */
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 700;
+            color: var(--dark-color);
+            background-color: #f8f9fc;
+            padding: 0.75rem;
+            vertical-align: top;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        
+        .table td {
+            padding: 0.75rem;
+            vertical-align: middle;
+            border-top: 1px solid #e3e6f0;
+        }
+        
+        .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+        }
+        
+        /* Badges */
+        .badge {
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 0.35em 0.65em;
+            border-radius: 0.25rem;
+        }
+        
+        /* Buttons */
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            border-radius: 0.2rem;
+        }
+        
+        /* Mobile menu button */
+        #sidebarToggle {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
 
 {% block body %}
-<h2>Gestion des utilisateurs</h2>
+<div class="d-flex">
+    <!-- Sidebar -->
+    <nav class="sidebar d-md-block bg-dark">
+        <div class="sidebar-brand d-flex align-items-center justify-content-center">
+            <i class="bi bi-shield-lock me-2"></i>
+            <span>Admin Panel</span>
+        </div>
+        <hr class="sidebar-divider">
+        
+        <div class="sidebar-sticky pt-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ path('admin_dashboard') }}">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('admin_create_employe') }}">
+                        <i class="bi bi-person-plus me-2"></i>
+                        Créer employé
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-people me-2"></i>
+                        Gestion utilisateurs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-graph-up me-2"></i>
+                        Statistiques
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-<table>
-    <thead>
-        <tr><th>ID</th><th>Email</th><th>Rôle</th><th>Action</th></tr>
-    </thead>
-    <tbody>
-    {% for user in utilisateurs %}
-        <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.roles|join(', ') }}</td>
-            <td>
-                <a href="#">Suspendre</a>
-            </td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+    <!-- Main Content -->
+    <div class="main-content w-100">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand topbar mb-4 static-top">
+            <button id="sidebarToggle" class="btn btn-link d-md-none rounded-circle mr-3">
+                <i class="bi bi-list"></i>
+            </button>
+            
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown">
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">Admin</span>
+                        <i class="bi bi-person-circle fs-4"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-<h2>Statistiques</h2>
-<!-- Graphiques avec Chart.js ou autre ici plus tard -->
+        <!-- Begin Page Content -->
+        <div class="container-fluid px-4">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <h1 class="h3 mb-0 text-gray-800">Dashboard Administrateur</h1>
+                <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                    <i class="bi bi-download me-1"></i> Générer rapport
+                </a>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card bg-primary text-white shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="card-title">UTILISATEURS</div>
+                                    <div class="card-value">{{ stats.totalUsers }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-people fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card bg-success text-white shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="card-title">EMPLOYÉS</div>
+                                    <div class="card-value">{{ stats.totalEmployes }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-briefcase fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card bg-info text-white shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="card-title">CRÉDITS TOTAUX</div>
+                                    <div class="card-value">{{ stats.totalCredits }}</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-coin fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card bg-warning text-white shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="card-title">COVOITURAGES</div>
+                                    <div class="card-value">
+                                        {% if covoiturageStats.counts is defined %}
+                                            {% set totalCovoiturages = 0 %}
+                                            {% for count in covoiturageStats.counts %}
+                                                {% set totalCovoiturages = totalCovoiturages + count %}
+                                            {% endfor %}
+                                            {{ totalCovoiturages }}
+                                        {% else %}
+                                            0
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-car-front fs-1"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Covoiturages par jour</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="chartCovoiturages"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Crédits gagnés</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-area">
+                                <canvas id="chartCredits"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Gestion des utilisateurs</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Pseudo</th>
+                                    <th>Email</th>
+                                    <th>Rôles</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in utilisateurs %}
+                                    <tr>
+                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.pseudo }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>
+                                            {% for role in user.roles %}
+                                                <span class="badge 
+                                                    {% if role == 'ROLE_ADMIN' %}bg-danger
+                                                    {% elseif role == 'ROLE_EMPLOYE' %}bg-info
+                                                    {% else %}bg-secondary{% endif %}">
+                                                    {{ role }}
+                                                </span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            <span class="badge {{ user.isActive() ? 'bg-success' : 'bg-danger' }}">
+                                                {{ user.isActive() ? 'Actif' : 'Inactif' }}
+                                            </span>
+                                        </td>
+                                        <td class="d-flex flex-wrap gap-1">
+                                            <a href="{{ path('admin_toggle_user', {'id': user.id}) }}" 
+                                               class="btn btn-sm {{ user.isActive() ? 'btn-warning' : 'btn-success' }}"
+                                               title="{{ user.isActive() ? 'Désactiver' : 'Activer' }}">
+                                               <i class="bi {{ user.isActive() ? 'bi-person-x' : 'bi-person-check' }}"></i>
+                                            </a>
+                                            
+                                            {% if 'ROLE_EMPLOYE' not in user.roles %}
+                                                <a href="{{ path('admin_promote_user', {'id': user.id}) }}" 
+                                                   class="btn btn-sm btn-outline-info"
+                                                   onclick="return confirm('Promouvoir cet utilisateur en employé ?');"
+                                                   title="Promouvoir employé">
+                                                   <i class="bi bi-arrow-up-circle"></i>
+                                                </a>
+                                            {% else %}
+                                                <span class="badge bg-info">
+                                                    <i class="bi bi-check-circle me-1"></i>Employé
+                                                </span>
+                                            {% endif %}
+                                            
+                                            <a href="#" class="btn btn-sm btn-outline-secondary"
+                                               title="Voir détails">
+                                               <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('show');
+        });
+
+        // Chart 1: Covoiturages
+        {% if covoiturageStats is defined %}
+        new Chart(document.getElementById('chartCovoiturages'), {
+            type: 'bar',
+            data: {
+                labels: {{ covoiturageStats.dates|default([])|json_encode|raw }},
+                datasets: [{
+                    label: 'Nombre de covoiturages',
+                    data: {{ covoiturageStats.counts|default([])|json_encode|raw }},
+                    backgroundColor: 'rgba(78, 115, 223, 0.5)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Credits
+        new Chart(document.getElementById('chartCredits'), {
+            type: 'line',
+            data: {
+                labels: {{ covoiturageStats.dates|default([])|json_encode|raw }},
+                datasets: [{
+                    label: 'Crédits gagnés',
+                    data: {{ covoiturageStats.credits|default([])|json_encode|raw }},
+                    borderColor: 'rgba(28, 200, 138, 1)',
+                    backgroundColor: 'rgba(28, 200, 138, 0.1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+        {% endif %}
+    </script>
 {% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de réservation{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h2>Confirmation requise</h2>
+                </div>
+                <div class="card-body">
+                    <p>Vous êtes sur le point de réserver un trajet de <strong>{{ covoiturage.depart }}</strong> à <strong>{{ covoiturage.arrivee }}</strong>.</p>
+                    <p>Prix : <strong>{{ covoiturage.prix }} crédits</strong></p>
+                    <p>Places restantes après votre réservation : <strong>{{ covoiturage.placesDisponibles - 1 }}</strong></p>
+                    
+                    <div class="alert alert-info mt-4">
+                        <h5>Double confirmation requise</h5>
+                        <p>Veuillez confirmer que vous souhaitez utiliser vos crédits pour ce trajet.</p>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ path('covoiturage_detail', {'id': covoiturage.id}) }}" class="btn btn-secondary">
+                            Annuler
+                        </a>
+                        <form action="{{ path('covoiturage_confirmer', {'id': participation.id}) }}" method="POST">
+                            <button type="submit" class="btn btn-success">
+                                Confirmer la réservation
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

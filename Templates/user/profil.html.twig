@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ utilisateur.pseudo }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <img src="{{ asset(utilisateur.photoProfil ? 'uploads/photos/' ~ utilisateur.photoProfil : 'images/default-avatar.png') }}" class="rounded-circle mb-3" width="150">
+            <h2>{{ utilisateur.pseudo }}</h2>
+            <p class="text-muted">Note moyenne : {{ utilisateur.noteMoyenne|number_format(1) }}/5</p>
+        </div>
+
+        <div class="col-md-8">
+            <h3>Avis reçus</h3>
+            {% for avis in avisList %}
+                <div class="border p-2 mb-2">
+                    <strong>{{ avis.auteur.pseudo }}</strong> a noté :
+                    <span class="text-warning">
+                        {% for i in 1..5 %}
+                            <i class="bi bi-star{{ i <= avis.note ? '-fill' : '' }}"></i>
+                        {% endfor %}
+                    </span>
+                    {% if avis.commentaire %}
+                        <p>{{ avis.commentaire }}</p>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>Aucun avis pour le moment.</p>
+            {% endfor %}
+
+            {% if canLeaveReview %}
+                <hr>
+                <h4>Laisser un avis</h4>
+                {{ form_start(avisForm) }}
+                    {{ form_row(avisForm.note) }}
+                    {{ form_row(avisForm.commentaire) }}
+                    <button class="btn btn-success">Envoyer</button>
+                {{ form_end(avisForm) }}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

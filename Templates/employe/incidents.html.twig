@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title 'Gestion des incidents' %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Incidents signalés</h1>
+    
+    <div class="card mt-4">
+        <div class="card-header bg-danger text-white">
+            <h2>Liste des covoiturages avec incidents</h2>
+        </div>
+        <div class="card-body">
+            {% if incidents %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Trajet</th>
+                                <th>Date</th>
+                                <th>Chauffeur</th>
+                                <th>Passagers</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for incident in incidents %}
+                                <tr>
+                                    <td>{{ incident.id }}</td>
+                                    <td>
+                                        {{ incident.depart }} → {{ incident.arrivee }}
+                                        {% if incident.descriptionIncident %}
+                                            <br><small class="text-muted">{{ incident.descriptionIncident|u.truncate(50, '...') }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ incident.dateDepart|date('d/m/Y H:i') }}</td>
+                                    <td>
+                                        {{ incident.chauffeur.pseudo }}
+                                        <br><small>{{ incident.chauffeur.email }}</small>
+                                    </td>
+                                    <td>
+                                        {% for participation in incident.participations %}
+                                            {{ participation.passager.pseudo }}<br>
+                                        {% endfor %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ path('employe_incident_detail', {id: incident.id}) }}" 
+                                           class="btn btn-sm btn-primary">
+                                            Détails
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">Aucun incident signalé</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
