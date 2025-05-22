@@ -14,7 +14,6 @@ security:
             security: false
 
         main:
-            anonymous: true
             lazy: true
             provider: app_user_provider
             form_login:
@@ -27,9 +26,9 @@ security:
                 target: /
 
     access_control:
-    - { path: ^/covoiturages, roles: PUBLIC_ACCESS }  
-    - { path: ^/covoiturages/recherche, roles: PUBLIC_ACCESS }  
+    - { path: ^/covoiturages, roles: IS_AUTHENTICATED_ANONYMOUSLY }  
+    - { path: ^/covoiturages/recherche, roles: IS_AUTHENTICATED_ANONYMOUSLY }  
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/employe, roles: ROLE_EMPLOYE }
     - { path: ^/dashboard, roles: ROLE_USER }
-    - { path: ^/$, roles: PUBLIC_ACCESS }
+    - { path: ^/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
