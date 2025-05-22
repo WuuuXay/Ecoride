@@ -3,25 +3,84 @@
 {% block title %}Bienvenue chez EcoRide{% endblock %}
 
 {% block body %}
-    <h2>Rejoignez le mouvement du covoiturage écologique</h2>
-    <p>EcoRide vous aide à voyager en réduisant votre empreinte carbone. Trouvez ou proposez un trajet en toute simplicité.</p>
+    <h2 style="text-align:center; font-weight:700; color:#2e7d32; margin-top:1rem;">Rejoignez le mouvement du covoiturage écologique</h2>
+    <p style="text-align:center; max-width:700px; margin:0.5rem auto 2rem auto; font-size:1.2rem; color:#3a5a40;">
+        EcoRide vous aide à voyager en réduisant votre empreinte carbone. Trouvez ou proposez un trajet en toute simplicité.
+    </p>
 
-    <img src="/img/eco.jpg" alt="Voyager vert avec EcoRide" style="width:100%; max-width:600px; display:block; margin:auto;">
+    <img src="/img/eco.jpg" alt="Voyager vert avec EcoRide" 
+         style="width:100%; max-width:600px; display:block; margin:auto auto 3rem auto; border-radius:10px;">
 
-    <form method="get" action="{{ path('covoiturages') }}" style="margin-top:2rem;">
-        <label>Ville de départ :</label>
-        <input type="text" name="depart" required>
+    <form method="get" action="{{ path('covoiturages') }}" 
+          style="margin:0 auto 3rem auto; max-width:500px; display:flex; flex-direction: column; gap: 1.25rem; background:#f0f9f1; padding:2rem; border-radius:10px;">
+        <label for="depart" style="font-weight:600; color:#2e7d32;">Ville de départ :</label>
+        <input id="depart" type="text" name="depart" required style="padding:10px; border:1.5px solid #a3d18e; border-radius:6px; font-size:1rem;">
 
-        <label>Ville d'arrivée :</label>
-        <input type="text" name="arrivee" required>
+        <label for="arrivee" style="font-weight:600; color:#2e7d32;">Ville d'arrivée :</label>
+        <input id="arrivee" type="text" name="arrivee" required style="padding:10px; border:1.5px solid #a3d18e; border-radius:6px; font-size:1rem;">
 
-        <label>Date :</label>
-        <input type="date" name="date" required>
+        <label for="date" style="font-weight:600; color:#2e7d32;">Date :</label>
+        <input id="date" type="date" name="date" required style="padding:10px; border:1.5px solid #a3d18e; border-radius:6px; font-size:1rem;">
 
-        <button type="submit">Rechercher</button>
+        <button type="submit" 
+                style="background-color:#4caf50; color:white; border:none; padding:14px; border-radius:8px; font-size:1.1rem; cursor:pointer; font-weight:700;">
+            Rechercher
+        </button>
     </form>
 
-    <div id="map"></div>
+    <!-- Présentation EcoRide -->
+    <section style="max-width:900px; background:#d8f3dc; margin:3rem auto; padding:2rem 2.5rem; border-radius:10px; color:#2e7d32; font-size:1.1rem; line-height:1.6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+        <h3 style="text-align:center; font-weight:700; margin-bottom:1rem;">Qui sommes-nous ?</h3>
+        <p>
+            La startup <strong>EcoRide</strong>, fraîchement créée en France, a pour objectif de réduire l'impact environnemental des déplacements en encourageant le covoiturage. 
+            EcoRide prône une approche écologique portée par José, le directeur technique, à travers une application web innovante.
+        </p>
+        <p>
+            Notre ambition est de devenir la principale plateforme de covoiturage pour les voyageurs soucieux de l'environnement et ceux cherchant une solution économique. 
+            La plateforme gère uniquement les déplacements en voitures.
+        </p>
+        <p>
+            José a sollicité Studi afin d'obtenir un développeur qualifié, et vous avez été sélectionné pour rejoindre cette aventure passionnante.
+        </p>
+    </section>
+
+    <!-- Galerie d'images -->
+    <section style="max-width:900px; margin:0 auto 1.5rem; display:flex; justify-content: center; gap:1.5rem;">
+        <figure class="image-card" style="flex:1; border-radius:10px; overflow:hidden; cursor:pointer; max-width:280px; margin:0;">
+            <img src="https://images.pexels.com/photos/5329298/pexels-photo-5329298.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Voiture avec passagers lors d'un covoiturage" 
+                 style="width:100%; height:180px; object-fit:cover; display:block; transition: transform 0.3s ease;">
+            <figcaption style="padding:1rem; font-weight:700; color:#14532d; text-align:center; background:#a7f3d0;">Partagez vos trajets facilement</figcaption>
+        </figure>
+        <figure class="image-card" style="flex:1; border-radius:10px; overflow:hidden; cursor:pointer; max-width:280px; margin:0;">
+            <img src="https://images.pexels.com/photos/32164039/pexels-photo-32164039/free-photo-of-montagnes-enneigees-sous-un-ciel-bleu-clair.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Paysage naturel préservé" 
+                 style="width:100%; height:180px; object-fit:cover; display:block; transition: transform 0.3s ease;">
+            <figcaption style="padding:1rem; font-weight:700; color:#14532d; text-align:center; background:#a7f3d0;">Protégez notre planète</figcaption>
+        </figure>
+        <figure class="image-card" style="flex:1; border-radius:10px; overflow:hidden; cursor:pointer; max-width:280px; margin:0;">
+            <img src="https://images.pexels.com/photos/7263902/pexels-photo-7263902.jpeg?auto=compress&cs=tinysrgb&w=300" alt="Interface de l'application EcoRide" 
+                 style="width:100%; height:180px; object-fit:cover; display:block; transition: transform 0.3s ease;">
+            <figcaption style="padding:1rem; font-weight:700; color:#14532d; text-align:center; background:#a7f3d0;">Application intuitive</figcaption>
+        </figure>
+    </section>
+
+    <div id="map" style="height: 400px; max-width: 900px; margin: 3rem auto 3rem auto; border-radius:10px;"></div>
+
+    <style>
+        /* Zoom effect on image cards */
+        .image-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Responsive: stack images on small screens */
+        @media (max-width: 700px) {
+            section {
+                flex-direction: column !important;
+            }
+            .image-card {
+                margin-bottom: 1.5rem;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}
@@ -37,15 +96,5 @@
     // Exemple de marqueurs fixes
     var marker = L.marker([48.8566, 2.3522]).addTo(map).bindPopup("Paris");
     var marker2 = L.marker([43.6045, 1.4442]).addTo(map).bindPopup("Toulouse");
-
-    // Tu peux aussi faire une boucle Twig pour ajouter des trajets dynamiques
 </script>
 {% endblock %}
-
-
-
-
-
-
-
-
